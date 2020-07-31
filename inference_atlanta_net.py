@@ -11,14 +11,16 @@ import torch
 
 from atlanta_model import AtlantaNet
 
-from misc import tools, config, E2P, A2P, layout_viewer
+from misc import tools, atlanta_transform, A2P, layout_viewer
 
 
 ###only for debug
 import matplotlib.pyplot as plt
 import cv2
 
-def_pth ='ckpt/RESNET50_B8_M3D_C_HR_SGD_01/E2P_best_valid.pth' ## best 227 temp 96 temp 30
+def_camera_h = 1.7
+
+def_pth ='ckpt/RESNET50_B8_M3D_C_HR_SGD_01/best_valid.pth' ## best 227 temp 96 temp 30
 ##def_pth ='ckpt/RESNET50_B8_M3D_Atlanta_C_HR_SGD_01/E2P_best_valid.pth' ##BEST 258 temp 229 temp 177 cleaned
 
 ##def_pth ='ckpt/RESNET101_B8_M3D_SGD_01/E2P_best_valid.pth' ##best 248
@@ -62,7 +64,7 @@ def_output_dir = 'results/m3d/'
 ##def_img = 'data/atlantalayout/test/img/htc-palace.jpg'
 
 ##def_img = 'data/matterport3D_test_clean/img/*.*'
-def_img = 'data/matterport3D_test_clean/img/7y3sRwLe3Va_1410b021e1c14f529188eb026fbb369a.png' ### from M3D best test - Adam perfect
+def_img = 'C:/vic/trunk/software/atlanta_net/data/matterport3D_test_clean/img/7y3sRwLe3Va_1410b021e1c14f529188eb026fbb369a.png' ### from M3D best test - Adam perfect
 ##def_img = 'data/matterport3D_test_clean/img/Z6MFQCViBuw_bc4ec1f735f3446aa4b56165d9508b45.png' ### from M3D worst
 
 
@@ -113,9 +115,9 @@ def h_from_contours(cp_prob, fp_prob):
 
     max_i = 0
     
-    for h in np.arange((config.camera_h+0.1), h_max, 0.05):
+    for h in np.arange((def_camera_h+0.1), h_max, 0.05):
                       
-       h_ratio =  (h - config.camera_h) / config.camera_h  
+       h_ratio =  (h - def_camera_h) / def_camera_h  
        
        cp_prob_scaled = cp_prob
        
@@ -141,7 +143,7 @@ def h_from_contours(cp_prob, fp_prob):
              
        if(i_count>max_i):
            max_i = i_count
-           h_opt = h - config.camera_h
+           h_opt = h - def_camera_h
                ##break
     
     return h_opt    
@@ -197,13 +199,9 @@ if __name__ == '__main__':
             e_x = torch.FloatTensor([img_ori / 255])
 
             print('e_x shape',e_x.shape,'for image',i_path)
-                        
-            inf_fov = config.fp_fov
+                  
             
-            e2p = E2P(config.pano_size, net.fp_size, inf_fov, config.fp_radius, gpu=False)
-
-            ##TESTfl = 90.2
-            ##TESTe2p = A2P(config.pano_size, net.fp_size, focal_l=fl, radius=config.fp_radius, gpu=False)
+            e2p = A2P(out_dim=net.fp_size, gpu=False)
 
             [up_view, down_view] = e2p(e_x)
               
@@ -235,7 +233,7 @@ if __name__ == '__main__':
             cp_ret, cp_prob = cv2.threshold(up_mask_img, 10, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
             fp_ret, fp_prob = cv2.threshold(down_mask_img, 10, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU) 
             
-            h_f_mean = config.camera_h*100.0
+            h_f_mean = def_camera_h*100.0
             h_c_mean = 130.0 ###default - backup in case h form contour fails
 
             ###NB. fixed focal is h:90.2
@@ -245,20 +243,17 @@ if __name__ == '__main__':
             if h_c>0:
                 h_c_mean = h_c
                 
-            print('h_c_mean from shapes',h_c_mean)            
+            print('h_c_mean from shapes',h_c_mean)     
+                        
                                     
             ###NB scale transform to metric dimensions evaluated on floor plane
             ### h/fp = 0.5 * tan(180-fov)
-            fp_meter_f = h_f_mean / math.tan(math.pi *  (180 - inf_fov) / 360) * 2
-            fp_meter_c = h_c_mean / math.tan(math.pi *  (180 - inf_fov) / 360) * 2
-                     
-            scale_c = (fp_meter_c / net.fp_size)
-            scale_f = (fp_meter_f / net.fp_size) #####focal scale h_f/focal
 
-            ##TESTscale_f = h_f_mean/fl
-            ##TESTscale_c = h_c_mean/fl
+            
+            scale_f = h_f_mean/atlanta_transform.fl
+            scale_c = h_c_mean/atlanta_transform.fl
 
-            print('floor metric scale',scale_f, scale_c)
+            ##print('floor metric scale',scale_f, scale_c)
                        
             cp_prob_metric = tools.resize(cp_prob, scale_c)
             fp_prob_metric = tools.resize(fp_prob, scale_f)
@@ -266,11 +261,11 @@ if __name__ == '__main__':
             c_pts, r_c, c_area = tools.approx_shape(cp_prob_metric, return_reliability=True)
             f_pts, r_f, f_area = tools.approx_shape(fp_prob_metric, return_reliability=True)                       
 
-            print('ceiling reliability and area',r_c, c_area,'floor reliability and area',r_f, f_area)  
+            ##print('ceiling reliability and area',r_c, c_area,'floor reliability and area',r_f, f_area)  
             
             area_ratio = min(c_area,f_area) / max(c_area,f_area)
 
-            print('area ratio',area_ratio)
+            ##print('area ratio',area_ratio)
                       
             if( (r_c<0.7 and r_f>r_c)):##or (area_ratio<0.25) ):
                 ###ceiling dims unreliable using floor shape
@@ -285,8 +280,9 @@ if __name__ == '__main__':
             print('saving heights',h_c_mean,-h_f_mean)
             
             if(len(room_pts)>3):
+                ##rint('2D shape', room_pts.shape)
                 json_name = tools.export2json(room_pts, W, H, fp_size, args.output_dir, def_img, k, h_c_mean, -h_f_mean)
-                print('2D shape', room_pts.shape)
+                
             else:
                 print('height recovery failed for',i_path)
 

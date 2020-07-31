@@ -1,3 +1,5 @@
 ckpt/
-data/
-misc/
+results/
+.vs/
+__pycache__/
+misc/__pycache__/
