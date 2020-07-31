@@ -43,7 +43,7 @@ def_pth ='ckpt/RESNET50_B8_M3D_C_HR_SGD_01/best_valid.pth' ## best 227 temp 96 t
 ##def_output_dir = 'results/train_m3d_atlanta_101_test_atlanta'
 ##def_output_dir = 'results/train_layoutmp3d_C_m3d'
 ##def_output_dir = 'results/train_layoutmp3d_test_atlanta'
-def_output_dir = 'results/m3d/'
+def_output_dir = 'results/'
 
 ##def_img = 'data/atlantalayout/test/img/R0010469_20170304160513.JPG' #### OK - clean - almost perfect at 177 peggio a a 204
 ##def_img = 'data/atlantalayout/test/img/scene_00000_485142.png' ##OK - clean - perfect at 204, bad a 177
