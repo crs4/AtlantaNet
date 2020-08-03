@@ -7,44 +7,10 @@ import torchvision.models as models
 import functools
 
 
-ENCODER_RESNET = [
-    'resnet18', 'resnet34', 'resnet50', 'resnet101', 'resnet152',
-    'resnext50_32x4d', 'resnext101_32x8d'
-]
-
-
-def lr_pad(x, padding=1):
-    ''' Pad left/right-most to each other instead of zero padding '''
-    return torch.cat([x[..., -padding:], x, x[..., :padding]], dim=3)
-
-class LR_PAD(nn.Module):
-    ''' Pad left/right-most to each other instead of zero padding '''
-    def __init__(self, padding=1):
-        super(LR_PAD, self).__init__()
-        self.padding = padding
-
-    def forward(self, x):
-        return lr_pad(x, self.padding)
-
-def wrap_lr_pad(net):
-    for name, m in net.named_modules():
-        if not isinstance(m, nn.Conv2d):
-            continue
-        if m.padding[1] == 0:
-            continue
-        w_pad = int(m.padding[1])
-        m.padding = (m.padding[0], 0)
-        names = name.split('.')
-        root = functools.reduce(lambda o, i: getattr(o, i), [net] + names[:-1])
-        setattr(
-            root, names[-1],
-            nn.Sequential(LR_PAD(w_pad), m)
-        )
-
 class Resnet(nn.Module):
-    def __init__(self, backbone='resnet101', pretrained=True):
+    def __init__(self, backbone='resnet50', pretrained=True):
         super(Resnet, self).__init__()
-        assert backbone in ENCODER_RESNET
+        ##assert backbone in ENCODER_RESNET
         self.encoder = getattr(models, backbone)(pretrained=pretrained)
         del self.encoder.fc, self.encoder.avgpool
 
@@ -55,10 +21,10 @@ class Resnet(nn.Module):
         x = self.encoder.relu(x) ###block0
         x = self.encoder.maxpool(x) ###block0
                 
-        x = self.encoder.layer1(x);  features.append(x)  # 1/4
-        x = self.encoder.layer2(x);  features.append(x)  # 1/8
-        x = self.encoder.layer3(x);  features.append(x)  # 1/16
-        x = self.encoder.layer4(x);  features.append(x)  # 1/32
+        x = self.encoder.layer1(x);  features.append(x)  #
+        x = self.encoder.layer2(x);  features.append(x)  #
+        x = self.encoder.layer3(x);  features.append(x)  #
+        x = self.encoder.layer4(x);  features.append(x)  #
         return features
 
     def list_blocks(self):
@@ -195,41 +161,66 @@ class AtlantaNet(nn.Module):
         seq_count = (x.shape[3]//32)**2 ####to reduce_wh_module forward
        
         ##merge features and covert to 1D sequence
-        feature = self.reduce_wh_module(conv_list, seq_count) ### 1X1024x1024: now 1024 represents wxh 
+        feature = self.reduce_wh_module(conv_list, seq_count) ### 1X1024x1024: wxh 
 
         feature = feature.permute(2, 0, 1)  # [w*h, b, layers] ### eg. 256 x b x 1024
         ##print('feature in to rnn',feature.shape)
         output, hidden = self.bi_rnn(feature)  # [seq_len, b, num_directions * hidden_size] -> 256x b x (2*512)
-        print('rnn output shape',output.shape)
-            
+                    
         output = self.drop_out(output)                      
                               
         output = output.permute(1, 2, 0)  # [b, 1, seq_len]
-
-        print(output.shape)
-                                                          
-        bon = output.reshape(output.shape[0], output.shape[1], self.out_size, self.out_size)
-
-        print(bon.shape)
-                 
+                                                                  
+        mask = output.reshape(output.shape[0], output.shape[1], self.out_size, self.out_size)
+                                
         ###DECODER last step
         for i, conv in enumerate(self.decoder):
-            ##bon = F.interpolate(bon, scale_factor=(2,2), mode='bilinear', align_corners=True)
-            bon = F.interpolate(bon, scale_factor=(2,2), mode=self.up_mode)
-            bon = conv(bon)
+            mask = F.interpolate(mask, scale_factor=(2,2), mode=self.up_mode)
+            mask = conv(mask)
                             
-        bon = bon.squeeze(1)
-                
-        ########bon = torch.sigmoid(bon) ####CHECK IT with last suppressed ReLU
-                           
-        return bon
+        mask = mask.squeeze(1)
+                                          
+        return mask
+
+################model end###############################################
+
+############utilities and testing
+
+
+def lr_pad(x, padding=1):
+    ''' Pad left/right-most to each other instead of zero padding '''
+    return torch.cat([x[..., -padding:], x, x[..., :padding]], dim=3)
+
+class LR_PAD(nn.Module):
+    ''' Pad left/right-most to each other instead of zero padding '''
+    def __init__(self, padding=1):
+        super(LR_PAD, self).__init__()
+        self.padding = padding
+
+    def forward(self, x):
+        return lr_pad(x, self.padding)
+
+def wrap_lr_pad(net):
+    for name, m in net.named_modules():
+        if not isinstance(m, nn.Conv2d):
+            continue
+        if m.padding[1] == 0:
+            continue
+        w_pad = int(m.padding[1])
+        m.padding = (m.padding[0], 0)
+        names = name.split('.')
+        root = functools.reduce(lambda o, i: getattr(o, i), [net] + names[:-1])
+        setattr(
+            root, names[-1],
+            nn.Sequential(LR_PAD(w_pad), m)
+        )
 
 if __name__ == '__main__':
-    print('testing 2D map DistanceNet')
+    print('testing 2D map AtlantaNet')
 
-    device = torch.device('cpu')
+    device = torch.device('cuda')
 
-    net = AtlantaNet('resnet50', use_gpu = False).to(device)
+    net = AtlantaNet('resnet50', use_gpu = True).to(device)
 
     fp_size = net.fp_size
 
@@ -245,8 +236,8 @@ if __name__ == '__main__':
 
     batch = torch.ones(2, 3, fp_size, fp_size).to(device)
 
-    dist_bon = net(batch)
+    mask = net(batch)
                
-    print('dist_bon shape', dist_bon.shape)
+    print('mask shape', mask.shape)
 
     print('test done')

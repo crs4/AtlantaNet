@@ -13,7 +13,7 @@ from torch.autograd import Variable
 fl = 90.27941412273405
 
 class A2P(nn.Module):
-    def __init__(self, equ_size=(512, 1024), out_dim=512, focal_l=fl, radius=1, up_flip=True, gpu=True):
+    def __init__(self, equ_size=(512, 1024), out_dim=512, focal_l=fl, radius=90, up_flip=True, gpu=True):
         super(A2P, self).__init__()
 
         self.equ_h = equ_size[0]

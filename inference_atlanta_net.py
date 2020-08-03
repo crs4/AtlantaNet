@@ -21,56 +21,12 @@ import cv2
 def_camera_h = 1.7
 
 def_pth ='ckpt/RESNET50_B8_M3D_C_HR_SGD_01/best_valid.pth' ## best 227 temp 96 temp 30
-##def_pth ='ckpt/RESNET50_B8_M3D_Atlanta_C_HR_SGD_01/E2P_best_valid.pth' ##BEST 258 temp 229 temp 177 cleaned
 
-##def_pth ='ckpt/RESNET101_B8_M3D_SGD_01/E2P_best_valid.pth' ##best 248
-##def_pth ='ckpt/RESNET101_B8_M3D_ATLANTA_SGD_01/E2P_best_valid.pth' ##best 175 - perfect with circles
-##def_pth ='ckpt/RESNET50_B8_LAYOUTMP3D_C_HR_SGD_01/E2P_best_valid.pth' ## best 268 temp 193
-##def_pth ='ckpt/RESNET50_B8_LAYOUTMP3D_HR_SGD_01/E2P_epoch_240.pth' ## temp 241 bwtter without outliers - temp 190 better than best
-##def_pth ='ckpt/RESNET50_B8_M3D_C_HR_SGD_double_01/E2P_best_valid.pth' ## 
+def_output_dir = 'results/matterportlayout/'
+##def_output_dir = 'results/'
 
-
-##def_pth ='ckpt/RESNET50_B2_M3D_HR_SGD_FT_atlanta_02/E2P_best_valid.pth' ## fine tuning with atlanta: best at 6
-##def_pth ='ckpt/RESNET50_B4_Atlanta_HR_SGD_02/E2P_best_valid.pth'
-
-##def_pth ='ckpt/RESNET50_B4_M3D_HR_SGD_FT_M3D_02/E2P_best_valid.pth' ####OLD with m3d FT - for comparison
-##def_output_dir = 'results/train_m3d_atlanta_test_atlanta_c'
-##def_output_dir = 'results/train_layoutmp3d_C_test_atlanta'
-##def_output_dir = 'results/train_m3d_atlanta_101_test_m3d'
-##def_output_dir = 'results/train_m3d_test_m3d'
-##def_output_dir = 'results/train_m3d_c_test_atlanta'
-##def_output_dir = 'results/train_m3d_double_test_m3d'
-##def_output_dir = 'results/train_m3d_atlanta_101_test_atlanta'
-##def_output_dir = 'results/train_layoutmp3d_C_m3d'
-##def_output_dir = 'results/train_layoutmp3d_test_atlanta'
-def_output_dir = 'results/'
-
-##def_img = 'data/atlantalayout/test/img/R0010469_20170304160513.JPG' #### OK - clean - almost perfect at 177 peggio a a 204
-##def_img = 'data/atlantalayout/test/img/scene_00000_485142.png' ##OK - clean - perfect at 204, bad a 177
-##def_img = 'data/atlantalayout/test/img/2t7WUuJeko7_c2e11b94c07a4d6c85cc60286f586a02_equi.png' ##OK clean - perfect
-##def_img = 'data/atlantalayout/test/img/2azQ1b91cZZ_02ee4a5177f844c0867d3e174a1080e2_equi.png' ###NO also with clean - area failure in evaluation
-##def_img = 'data/atlantalayout/test/img/2azQ1b91cZZ_76a02b415daa46f3bb050260c486b570_equi.png'  ### OK - clean - wait all iterations 
-
-##def_img = 'data/atlantalayout/test/img/*.*'
-##def_img = 'data/atlantalayout/test/img/2azQ1b91cZZ_cc20dc9d74df4643b94a0260058c7822_equi.png' ## OK - improve best valid
-##def_img = 'data/atlantalayout/test/img/2azQ1b91cZZ_0a9f30bd318e40de89f71e4bf6987358_equi.png' ### OK at best valid
-##def_img = 'data/atlantalayout/test/img/82sE5b5pLXE_3c3d6396295045dd9ccb349213aac87c_equi.png' ## OK - clean - perfect at 177
-##def_img = 'data/atlantalayout/test/img/82sE5b5pLXE_0b932e0fc6994c9b930646e41cf21616_equi.png' ## OK
-##def_img = 'data/atlantalayout/test/img/octagonal.jpg' ## OK - perfect
-##def_img = 'data/atlantalayout/test/img/R0010074_20160518200143.jpg' ###OK - small fov problem
-##def_img = 'data/atlantalayout/test/img/R0010475_20170304160717.jpg' ##OK
-##def_img = 'data/atlantalayout/test/img/rgb_rawlight.png' ##OK
-##def_img = 'data/atlantalayout/test/img/scene_02149_996.png' ## CHECK after full training - check annotation
-##def_img = 'data/atlantalayout/test/img/htc-palace.jpg'
-
-##def_img = 'data/matterport3D_test_clean/img/*.*'
+##def_img = 'C:/vic/trunk/software/atlanta_net/data/matterport3D_test_clean/img/*.*'
 def_img = 'C:/vic/trunk/software/atlanta_net/data/matterport3D_test_clean/img/7y3sRwLe3Va_1410b021e1c14f529188eb026fbb369a.png' ### from M3D best test - Adam perfect
-##def_img = 'data/matterport3D_test_clean/img/Z6MFQCViBuw_bc4ec1f735f3446aa4b56165d9508b45.png' ### from M3D worst
-
-
-##def_img = 'data/test/R0010467_20170304160431.JPG'
-##def_img = 'data/test/R0010468_20170304160451.JPG'
-
 
 def cuda_to_cpu_tensor(x_tensors):
     x_tensors = x_tensors.cpu().numpy()
@@ -85,14 +41,9 @@ def cuda_to_cpu_tensor(x_tensors):
 def inference(net, x, device):
                            
     cont = net(x.to(device)) ### 
-
-    pytorch_total_params = sum(p.numel() for p in net.parameters())
-    print('pytorch_total_params', pytorch_total_params)
-           
-    cont = cuda_to_cpu_tensor(cont.cpu()).mean(0)  
                  
-    print('cont shape', cont.shape)
-        
+    cont = cuda_to_cpu_tensor(cont.cpu()).mean(0)  
+            
     return cont 
 
 def h_from_contours(cp_prob, fp_prob):
@@ -216,15 +167,7 @@ if __name__ == '__main__':
             down_mask = down_mask.squeeze(0)
 
             h_c_max = np.amax(up_mask)
-            h_f_max = np.amax(down_mask)
-
-            ##non_zero_c_i = np.nonzero(up_mask)
-            ##non_zero_f_i = np.nonzero(down_mask)
-            ##h_c_mean = up_mask[non_zero_c_i].mean()
-            ##h_f_mean = up_mask[non_zero_f_i].mean() 
-            
-            print('Max heights',h_c_max, -h_f_max)
-            ############################                                 
+            h_f_max = np.amax(down_mask)                        
                                    
                        
             up_mask_img = ( up_mask * 255/h_c_max ).astype(np.uint8)
@@ -242,14 +185,8 @@ if __name__ == '__main__':
             
             if h_c>0:
                 h_c_mean = h_c
-                
-            print('h_c_mean from shapes',h_c_mean)     
+              
                         
-                                    
-            ###NB scale transform to metric dimensions evaluated on floor plane
-            ### h/fp = 0.5 * tan(180-fov)
-
-            
             scale_f = h_f_mean/atlanta_transform.fl
             scale_c = h_c_mean/atlanta_transform.fl
 
@@ -318,16 +255,14 @@ if __name__ == '__main__':
                footprint_down_metric = tools.resize(footprint_down, scale_f)
 
                if(len(c_pts)>0):
-                   cv2.polylines(footprint_up_metric, [c_pts], True, (0,0,255),2,cv2.LINE_AA)
-                
+                   cv2.polylines(footprint_up_metric, [c_pts], True, (0,0,255),2,cv2.LINE_AA)             
                
-
                if(len(f_pts)>3):
                    cv2.polylines(footprint_down_metric, [f_pts], True, (255,0,0),2,cv2.LINE_AA)
             
 
                if (json_name is not None):
-                   layout_viewer.show_3D_layout(def_img, json_name, 1.6) ###CHECK camera height here 
+                   layout_viewer.show_3D_layout(def_img, json_name, def_camera_h)
                 
                plt.figure(0)
                plt.title('Ceiling tensor with result')
