@@ -25,8 +25,8 @@ def_pth ='ckpt/RESNET50_B8_M3D_C_HR_SGD_01/best_valid.pth' ## best 227 temp 96 t
 def_output_dir = 'results/matterportlayout/'
 ##def_output_dir = 'results/'
 
-##def_img = 'C:/vic/trunk/software/atlanta_net/data/matterport3D_test_clean/img/*.*'
-def_img = 'C:/vic/trunk/software/atlanta_net/data/matterport3D_test_clean/img/7y3sRwLe3Va_1410b021e1c14f529188eb026fbb369a.png' ### from M3D best test - Adam perfect
+def_img = 'C:/vic/trunk/software/atlanta_net/data/matterport3D_test_clean/img/*.*'
+##def_img = 'C:/vic/trunk/software/atlanta_net/data/matterport3D_test_clean/img/7y3sRwLe3Va_1410b021e1c14f529188eb026fbb369a.png' ### from M3D best test - Adam perfect
 
 def cuda_to_cpu_tensor(x_tensors):
     x_tensors = x_tensors.cpu().numpy()
@@ -225,7 +225,7 @@ if __name__ == '__main__':
 
 ##################################################################################################################################                                     
           
-            output_img = True
+            output_img = False
 
             if(output_img):
                 bon = tools.transform2equi(room_pts,h_c_mean,h_f_mean, W, H, net.fp_size, scale)           
@@ -241,7 +241,7 @@ if __name__ == '__main__':
                    vh, vw = vis_out.shape[:2]
                    Image.fromarray(vis_out).save(vis_path)
                
-            show_img = True
+            show_img = False
             
             if show_img:
                ### draw functions
