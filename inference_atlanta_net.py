@@ -13,20 +13,19 @@ from atlanta_model import AtlantaNet
 
 from misc import tools, atlanta_transform, A2P, layout_viewer
 
-
 ###only for debug
 import matplotlib.pyplot as plt
 import cv2
 
-def_camera_h = 1.7
+def_camera_h = 1.7 ####as a metric scale factor
 
-def_pth ='ckpt/RESNET50_B8_M3D_C_HR_SGD_01/best_valid.pth' ## best 227 temp 96 temp 30
+def_pth ='ckpt/matterport_layout.pth' ## best 227 temp 96 temp 30
 
 def_output_dir = 'results/matterportlayout/'
 ##def_output_dir = 'results/'
 
-def_img = 'C:/vic/trunk/software/atlanta_net/data/matterport3D_test_clean/img/*.*'
-##def_img = 'C:/vic/trunk/software/atlanta_net/data/matterport3D_test_clean/img/7y3sRwLe3Va_1410b021e1c14f529188eb026fbb369a.png' ### from M3D best test - Adam perfect
+##def_img = 'C:/vic/trunk/software/atlanta_net/data/matterport3D_test_clean/img/*.*'
+def_img = 'C:/vic/trunk/software/atlanta_net/data/matterport3D_test_clean/img/7y3sRwLe3Va_1410b021e1c14f529188eb026fbb369a.png' ### from M3D best test - Adam perfect
 
 def cuda_to_cpu_tensor(x_tensors):
     x_tensors = x_tensors.cpu().numpy()
@@ -35,8 +34,6 @@ def cuda_to_cpu_tensor(x_tensors):
     x_img = x_tensors[0 : sz]        
     x_imgs.append(x_img)
     return np.array(x_imgs)
-
-
 
 def inference(net, x, device):
                            
@@ -223,73 +220,71 @@ if __name__ == '__main__':
             else:
                 print('height recovery failed for',i_path)
 
-##################################################################################################################################                                     
-          
-            output_img = False
+##################################################################################################################################                                  
+                                                          
+            if(args.visualize):
+                output_seg = False
 
-            if(output_img):
-                bon = tools.transform2equi(room_pts,h_c_mean,h_f_mean, W, H, net.fp_size, scale)           
+                if(output_seg):
+                    bon = tools.transform2equi(room_pts,h_c_mean,h_f_mean, W, H, net.fp_size, scale)           
                                                                                                                                                
-                vis_out = tools.visualize_equi_model(e_x.squeeze(), torch.FloatTensor(bon.copy()))
+                    vis_out = tools.visualize_equi_model(e_x.squeeze(), torch.FloatTensor(bon.copy()))
 
-                if (vis_out is not None):
-                   plt.figure(6)
-                   plt.title('Equi mask')
-                   plt.imshow(vis_out)
+                    if (vis_out is not None):
+                        plt.figure(6)
+                        plt.title('Equi mask')
+                        plt.imshow(vis_out)
 
-                   vis_path = os.path.join(args.output_dir, k + '.raw.png')
-                   vh, vw = vis_out.shape[:2]
-                   Image.fromarray(vis_out).save(vis_path)
-               
-            show_img = False
-            
-            if show_img:
-               ### draw functions
-               x_up_img = tools.x2image(x_up.squeeze(0))
-               x_down_img = tools.x2image(x_down.squeeze(0))
+                    vis_path = os.path.join(args.output_dir, k + '.raw.png')
+                    vh, vw = vis_out.shape[:2]
+                    Image.fromarray(vis_out).save(vis_path)
+
+
+                ### draw functions
+                x_up_img = tools.x2image(x_up.squeeze(0))
+                x_down_img = tools.x2image(x_down.squeeze(0))
                                 
-               footprint_up = x_up_img.copy()
-               footprint_down = x_down_img.copy()
+                footprint_up = x_up_img.copy()
+                footprint_down = x_down_img.copy()
 
-               footprint_up_metric = tools.resize(footprint_up, scale_c)
-               footprint_down_metric = tools.resize(footprint_down, scale_f)
+                footprint_up_metric = tools.resize(footprint_up, scale_c)
+                footprint_down_metric = tools.resize(footprint_down, scale_f)
 
-               if(len(c_pts)>0):
-                   cv2.polylines(footprint_up_metric, [c_pts], True, (0,0,255),2,cv2.LINE_AA)             
+                if(len(c_pts)>0):
+                    cv2.polylines(footprint_up_metric, [c_pts], True, (0,0,255),2,cv2.LINE_AA)             
                
-               if(len(f_pts)>3):
+                if(len(f_pts)>3):
                    cv2.polylines(footprint_down_metric, [f_pts], True, (255,0,0),2,cv2.LINE_AA)
             
 
-               if (json_name is not None):
-                   layout_viewer.show_3D_layout(def_img, json_name, def_camera_h)
+                if (json_name is not None):
+                    layout_viewer.show_3D_layout(def_img, json_name, def_camera_h)
                 
-               plt.figure(0)
-               plt.title('Ceiling tensor with result')
-               plt.imshow(footprint_up_metric)
+                plt.figure(0)
+                plt.title('Ceiling tensor with result')
+                plt.imshow(footprint_up_metric)
 
-               plt.figure(1)
-               plt.title('Inferred ceiling mask')
-               plt.imshow(up_mask_img)
+                plt.figure(1)
+                plt.title('Inferred ceiling mask')
+                plt.imshow(up_mask_img)
 
-               plt.figure(2)
-               plt.title('Filtered ceiling mask')
-               plt.imshow(cp_prob)
+                plt.figure(2)
+                plt.title('Filtered ceiling mask')
+                plt.imshow(cp_prob)
 
-               plt.figure(3)
-               plt.title('Floor tensor with result')
-               plt.imshow(footprint_down_metric)
+                plt.figure(3)
+                plt.title('Floor tensor with result')
+                plt.imshow(footprint_down_metric)
 
-               plt.figure(4)
-               plt.title('Inferred floor mask')
-               plt.imshow(down_mask_img)
+                plt.figure(4)
+                plt.title('Inferred floor mask')
+                plt.imshow(down_mask_img)
 
-               plt.figure(5)
-               plt.title('Filtered floor mask')
-               plt.imshow(fp_prob)
+                plt.figure(5)
+                plt.title('Filtered floor mask')
+                plt.imshow(fp_prob)
                                            
-
-               plt.show()                   
+                plt.show()                   
             
                       
             

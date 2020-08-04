@@ -184,7 +184,7 @@ if __name__ == '__main__':
         ##loc_iou3d = test_general_ext(idx, dt_cor_id, dt_z0, dt_z1, gt_cor_id, args.w, args.h, losses)
         loc_iou3d, loc_iou2d, loc_iouH = test_general_ceiling(idx, dt_cor_id, dt_z0, dt_z1, gt_cor_id, args.w, args.h, losses)
                 
-        if(loc_iou3d<0.5):
+        if(loc_iou3d<0.52):
             print('outlier',dt_path)
             max_count = max_count + 1
 
