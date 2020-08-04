@@ -23,7 +23,7 @@ This repo is a **python** implementation that you can:
 
 ## Download Pretrained Models
 To be copied in your local ./ckpt directory.
-- [matterportlayout.pth](https://vicserver.crs4.it/atlantanet/matterport_layout.pth)
+- [matterportlayout.pth](https://vicserver.crs4.it/atlantanet/matterportlayout.pth)
     - Trained with ResNet50 on MatterportLayout cleaned dataset. 
 	    - NB: many images have been corrected or removed by the authors because they have incorrect automatic annotations or layouts that are not compatible with the original assumptions (e.g. ceilings with different heights). See orignal dataset link for details
         - Adopted splitting provided in the repository.
