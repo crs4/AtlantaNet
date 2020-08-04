@@ -30,7 +30,9 @@ To be copied in your local ./ckpt directory.
 
 
 ## Download Dataset
-Please relative instruction from PanoContext/Stanford2D3D, MatterportLayout, Structured3D datasets providers.
+Please read relative instruction from PanoContext/Stanford2D3D, MatterportLayout, Structured3D datasets providers.
+We follow the same notation (.png image with .txt associated) proposed by HorizonNet.
+See our paper for training strategy and set up.
 Useful informations and details about how to prepare such data are the HorizonNet and MatterportLayout pages.
 
 - Structured3D Dataset
