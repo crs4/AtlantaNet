@@ -28,8 +28,8 @@ based on HorizonNet implementation (https://github.com/sunset1995/HorizonNet) to
 To be copied in your local ./ckpt directory.
 - [resnet50_matterportlayout.pth](https://vicserver.crs4.it/atlantanet/resnet50_matterportlayout.pth)
     - Trained with ResNet50 on MatterportLayout cleaned dataset. 
-	    - NB: many images have been corrected or removed by the authors because they have incorrect automatic annotations or layouts that are not compatible with the original assumptions (e.g. ceilings with different heights). See orignal dataset link for details
-        - Adopted splitting provided in the repository.
+	    - NB: several images have been removed by the authors due to incorrect annotations or layouts that are not compatible with the original assumptions (e.g. horizontal ceilings). See the original dataset link for details (https://github.com/ericsujw/Matterport3DLayoutAnnotation).
+        - Adopted data splitting provided in the data/splitting folder.
 - [resnet50_atlantalayout.pth](https://vicserver.crs4.it/atlantanet/resnet50_atlantalayout.pth)
     - Trained with ResNet50 on MatterportLayout cleaned dataset and finetuned on the Atlantalayout training set.
 - [resnet101_atlantalayout.pth](https://vicserver.crs4.it/atlantanet/resnet101_atlantalayout.pth)
@@ -37,13 +37,12 @@ To be copied in your local ./ckpt directory.
 
 ## Download Dataset
 We follow the same notation (.png image with .txt associated) proposed by HorizonNet (https://github.com/sunset1995/HorizonNet).
-Instruction to download and prepare PanoContext/Stanford2D3D, MatterportLayout, Structured3D datasets are provided by HorizonNet (https://github.com/sunset1995/HorizonNet) and MatterportLayout (FIXME).
+Instruction to download and prepare PanoContext/Stanford2D3D, MatterportLayout, Structured3D datasets are provided by HorizonNet (https://github.com/sunset1995/HorizonNet) and MatterportLayout(https://github.com/ericsujw/Matterport3DLayoutAnnotation).
 
-- Structured3D Dataset
-        - Following [this](https://github.com/sunset1995/HorizonNet/blob/master/README_ST3D.md#dataset-preparation) to prepare training/validation/testing for HorizonNet.
+- AtlantaLayout Dataset
+        - COMING SOON
 	
 ## Inference on your images	
-
 
 
 
