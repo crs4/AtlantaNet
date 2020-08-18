@@ -53,10 +53,15 @@ def var2np(data_lst):
         return trans(data_lst)
 
 
+###find the the largest connected component - evaluate ceiling reliability for special cases (eg curved ceilings): using floor shape in case of ureliable ceiling
+    ###conditions: 1. best connected component must be times larger than others (using threshold) 2. must contain the camera
 def approx_shape(data, fp_threshold=0.5, epsilon_b=0.005, rel_threshold=0.5, return_reliability=False):
     data_c = data.copy()
     ret, data_thresh = cv2.threshold(data_c, fp_threshold, 1, 0)
     data_thresh = np.uint8(data_thresh)
+
+    w = data.shape[0]
+    h = data.shape[1] 
     
     data_cnt, data_heri = cv2.findContours(data_thresh, 1, 2)##CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE
     ##data_cnt, data_heri = cv2.findContours(data_thresh, 0, 2)##CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE
@@ -72,10 +77,13 @@ def approx_shape(data, fp_threshold=0.5, epsilon_b=0.005, rel_threshold=0.5, ret
 
         if(len(data_cnt)>1 and (area0 > 0)):
             area1 = cv2.contourArea(data_cnt[1])
+            ###condition 1.
             reliability = 1.0 - (area1/area0)
         else:
             reliability = 1.0
-     
+
+        ##print('connected components', len(data_cnt))
+                 
     if(reliability<rel_threshold and len(data_cnt)>1):
         mergedlist = np.concatenate((data_cnt[0], data_cnt[1]), axis=0)
         approx = cv2.convexHull(mergedlist)
@@ -83,6 +91,13 @@ def approx_shape(data, fp_threshold=0.5, epsilon_b=0.005, rel_threshold=0.5, ret
     else:
         epsilon = epsilon_b*cv2.arcLength(data_cnt[0], True)
         approx = cv2.approxPolyDP(data_cnt[0], epsilon,True)
+
+    ###condition 2.: check camera
+    dist = cv2.pointPolygonTest(approx,(w/2,h/2), True)
+
+    if(dist<0):
+        reliability = 0.1
+
 
     if return_reliability:
         ap_area = cv2.contourArea(approx)

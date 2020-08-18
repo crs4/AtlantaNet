@@ -130,16 +130,12 @@ def prepare_gtdt_pairs(gt_glob, dt_glob):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    ##parser.add_argument('--dt_glob', required=False, default = 'results/train_layoutmp3d_m3d/*json')
-    ##parser.add_argument('--dt_glob', required=False, default = 'results/train_layoutmp3d_C_m3d/*json')
     parser.add_argument('--dt_glob', required=False, default = '../results/matterportlayout/*json')
-    ##parser.add_argument('--dt_glob', required=False, default = 'results/train_m3d_atlanta_test_m3d/*json')
-    ##parser.add_argument('--dt_glob', required=False, default = 'results/train_m3d_atlanta_101_test_m3d/*json')
-    ##parser.add_argument('--dt_glob', required=False, default = 'results/train_m3d_ft_test_m3d/*json')
+    ##parser.add_argument('--dt_glob', required=False, default = '../results/matterportlayout_ft/*json')
+    ##parser.add_argument('--dt_glob', required=False, default = '../results/atlantalayout/*json')
+    
     parser.add_argument('--gt_glob', required=False, default = 'C:/vic/trunk/software/atlanta_net/data/matterport3D_test_clean/label_cor/*')##scene_00000_485142.txt',
-    ##parser.add_argument('--dt_glob', required=False, default = 'results/horizon_m3d_clean/*json')
-    ##parser.add_argument('--gt_glob', required=False, default = 'data/ps_dataset/test/label_cor/*')
-                        
+    ##parser.add_argument('--gt_glob', required=False, default = 'C:/vic/trunk/software/atlanta_net/data/atlantalayout/test/label_cor/*')                        
     parser.add_argument('--w', default=1024, type=int,
                         help='GT images width')
     parser.add_argument('--h', default=512, type=int,
@@ -184,7 +180,7 @@ if __name__ == '__main__':
         ##loc_iou3d = test_general_ext(idx, dt_cor_id, dt_z0, dt_z1, gt_cor_id, args.w, args.h, losses)
         loc_iou3d, loc_iou2d, loc_iouH = test_general_ceiling(idx, dt_cor_id, dt_z0, dt_z1, gt_cor_id, args.w, args.h, losses)
                 
-        if(loc_iou3d<0.52):
+        if(loc_iou3d<0.1):
             print('outlier',dt_path)
             max_count = max_count + 1
 

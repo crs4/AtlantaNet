@@ -19,12 +19,17 @@ import cv2
 
 def_camera_h = 1.7 ####as a metric scale factor
 
-def_pth ='ckpt/matterport_layout.pth' ## best 227 temp 96 temp 30
+##def_pth ='ckpt/matterport_layout_ft.pth' ## best 227 temp 96 temp 30
+##def_pth ='ckpt/matterport_layout.pth' ## best 227 temp 96 temp 30
+def_pth ='ckpt/m3d_atlanta_101.pth' ##
+##def_pth ='ckpt/matterport_layout_ft_atlanta.pth' ## m3d and atlanta fine tuning OK per atlanta numerico - da testare con m3d test
 
+##def_output_dir = 'results/atlantalayout/'
 def_output_dir = 'results/matterportlayout/'
-##def_output_dir = 'results/'
 
 ##def_img = 'C:/vic/trunk/software/atlanta_net/data/matterport3D_test_clean/img/*.*'
+##def_img = 'C:/vic/trunk/software/atlanta_net/data/atlantalayout/test/img/*.*'
+##def_img = 'C:/vic/trunk/software/atlanta_net/data/atlantalayout/test/img/2azQ1b91cZZ_02ee4a5177f844c0867d3e174a1080e2_equi.png' ###atlanta outlayer with m3d
 def_img = 'C:/vic/trunk/software/atlanta_net/data/matterport3D_test_clean/img/7y3sRwLe3Va_1410b021e1c14f529188eb026fbb369a.png' ### from M3D best test - Adam perfect
 
 def cuda_to_cpu_tensor(x_tensors):
@@ -101,7 +106,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--pth', required=False, default = def_pth,
                         help='path to load saved checkpoint.')
-    parser.add_argument('--img_glob', required=False, default = def_img)
+    parser.add_argument('--img', required=False, default = def_img)
     parser.add_argument('--output_dir', required=False, default = def_output_dir)
     parser.add_argument('--visualize', action='store_true', default = True)
     parser.add_argument('--no_cuda', action='store_true',
@@ -110,7 +115,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Prepare image to processed
-    paths = sorted(glob.glob(args.img_glob))
+    paths = sorted(glob.glob(args.img))
     if len(paths) == 0:
         print('no images found')
     for path in paths:
@@ -195,9 +200,9 @@ if __name__ == '__main__':
             c_pts, r_c, c_area = tools.approx_shape(cp_prob_metric, return_reliability=True)
             f_pts, r_f, f_area = tools.approx_shape(fp_prob_metric, return_reliability=True)                       
 
-            ##print('ceiling reliability and area',r_c, c_area,'floor reliability and area',r_f, f_area)  
+            print('ceiling reliability and area',r_c, c_area,'floor reliability and area',r_f, f_area)  
             
-            area_ratio = min(c_area,f_area) / max(c_area,f_area)
+            ##area_ratio = min(c_area,f_area) / max(c_area,f_area)
 
             ##print('area ratio',area_ratio)
                       
@@ -215,7 +220,7 @@ if __name__ == '__main__':
             
             if(len(room_pts)>3):
                 ##rint('2D shape', room_pts.shape)
-                json_name = tools.export2json(room_pts, W, H, fp_size, args.output_dir, def_img, k, h_c_mean, -h_f_mean)
+                json_name = tools.export2json(room_pts, W, H, fp_size, args.output_dir, args.img, k, h_c_mean, -h_f_mean)
                 
             else:
                 print('height recovery failed for',i_path)
@@ -235,9 +240,9 @@ if __name__ == '__main__':
                         plt.title('Equi mask')
                         plt.imshow(vis_out)
 
-                    vis_path = os.path.join(args.output_dir, k + '.raw.png')
-                    vh, vw = vis_out.shape[:2]
-                    Image.fromarray(vis_out).save(vis_path)
+                    ##vis_path = os.path.join(args.output_dir, k + '.raw.png')
+                    ##vh, vw = vis_out.shape[:2]
+                    ##Image.fromarray(vis_out).save(vis_path)
 
 
                 ### draw functions
@@ -258,31 +263,31 @@ if __name__ == '__main__':
             
 
                 if (json_name is not None):
-                    layout_viewer.show_3D_layout(def_img, json_name, def_camera_h)
+                    layout_viewer.show_3D_layout(args.img, json_name, def_camera_h)
                 
                 plt.figure(0)
                 plt.title('Ceiling tensor with result')
                 plt.imshow(footprint_up_metric)
 
-                plt.figure(1)
-                plt.title('Inferred ceiling mask')
-                plt.imshow(up_mask_img)
+                ##plt.figure(1)
+                ##plt.title('Inferred ceiling mask')
+                ##plt.imshow(up_mask_img)
 
-                plt.figure(2)
-                plt.title('Filtered ceiling mask')
-                plt.imshow(cp_prob)
+                ##plt.figure(2)
+                ##plt.title('Filtered ceiling mask')
+                ##plt.imshow(cp_prob)
 
                 plt.figure(3)
                 plt.title('Floor tensor with result')
                 plt.imshow(footprint_down_metric)
 
-                plt.figure(4)
-                plt.title('Inferred floor mask')
-                plt.imshow(down_mask_img)
+                ##plt.figure(4)
+                ##plt.title('Inferred floor mask')
+                ##plt.imshow(down_mask_img)
 
-                plt.figure(5)
-                plt.title('Filtered floor mask')
-                plt.imshow(fp_prob)
+                ##plt.figure(5)
+                ##plt.title('Filtered floor mask')
+                ##plt.imshow(fp_prob)
                                            
                 plt.show()                   
             
