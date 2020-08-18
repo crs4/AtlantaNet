@@ -44,8 +44,9 @@ Instruction to download and prepare PanoContext/Stanford2D3D, MatterportLayout, 
 	
 ## Inference on your images	
 Here an example of inferring using the pre-trained model on MatterportLayout finetuned on AtlantaLayout:
-
+```
 python inference_atlanta_net.py --pth ckpt/resnet50_atlantalayout.pth --img data/atlantalayout/test/img/2t7WUuJeko7_c2e11b94c07a4d6c85cc60286f586a02_equi.png
+```
     ```
     - `--pth` path to the trained model.
     - `--img` path to the input equirectangular image.
