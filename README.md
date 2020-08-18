@@ -2,14 +2,13 @@
 Pytorch implementation of the ECCV 2020 paper: AtlantaNet: Inferring the 3D Indoor Layout from a Single 360 Image beyond the Manhattan World Assumption
 
 ![](assets/teaser.jpg)
-images obtained with resnet101_atlantalayout.pth (see below).
+Images obtained with resnet101_atlantalayout.pth (see below).
 
 This repo is a **python** implementation where you can try:
-- **Inference on your images** to get general shaped room layout (Manhattan or Atlanta World) as .json output. 
-Additionally we provide:
-- **3D output model visualization**
-- **Numerical evaluation compared to ground truth**
-based on HorizonNet implementation (https://github.com/sunset1995/HorizonNet) to facilitate comparisons.
+- **Inference on panoramic images** to get general shaped room layout (Manhattan or Atlanta World) as .json output (3D model viewing included).
+We additionally provide numerical evaluation compared to ground truth (see repository).
+
+3D viewer and evaluation metrics are based on the code provided by HorizonNet(https://github.com/sunset1995/HorizonNet) to simplify comparisons.
 
 **Method Pipeline overview**:
 ![](assets/overview.jpg)
@@ -43,7 +42,7 @@ Instruction to download and prepare PanoContext/Stanford2D3D, MatterportLayout, 
 - AtlantaLayout Dataset
         - Download from here: https://vicserver.crs4.it/atlantanet/atlantalayout.zip
 	
-## Inference on your images	
+## Inference on equirectagular images	
 Here an example of inferring using the pre-trained model on MatterportLayout finetuned on AtlantaLayout:
 ```
 python inference_atlanta_net.py --pth ckpt/resnet50_atlantalayout.pth --img data/atlantalayout/test/img/2t7WUuJeko7_c2e11b94c07a4d6c85cc60286f586a02_equi.png
