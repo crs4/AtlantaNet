@@ -79,9 +79,7 @@ def test_shape(id, dt_cor_id, dt_z0, dt_z1, gt_cor_id, w, h, losses):
         
         iouH = min(h_dt, h_gt) / max(h_dt, h_gt)
         iou3d = iou2d * iouH
-
-        th = 0.1
-               
+                               
         # Add a result
         n_corners = len(gt_floor_coor)
 
@@ -93,11 +91,11 @@ def test_shape(id, dt_cor_id, dt_z0, dt_z1, gt_cor_id, w, h, losses):
             ##print('best 8',gt_path)
             n_corners = '10+'
 
-        if(iou3d>th):
-            losses[n_corners]['2DIoU'].append(iou2d)
-            losses[n_corners]['3DIoU'].append(iou3d)
-            losses['overall']['2DIoU'].append(iou2d)
-            losses['overall']['3DIoU'].append(iou3d)
+        
+        losses[n_corners]['2DIoU'].append(iou2d)
+        losses[n_corners]['3DIoU'].append(iou3d)
+        losses['overall']['2DIoU'].append(iou2d)
+        losses['overall']['3DIoU'].append(iou3d)
     else:
         iou3d = 0
 
