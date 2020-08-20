@@ -17,20 +17,12 @@ from misc import tools, atlanta_transform, A2P, layout_viewer
 import matplotlib.pyplot as plt
 import cv2
 
-def_camera_h = 1.7 ####as a metric scale factor
+#####dafault values
+def_camera_h = 1.7 ####as a metric scale factor - camera height in meters
+def_pth ='ckpt/resnet101_atlantalayout.pth' ##
+def_output_dir = 'results/'
 
-##def_pth ='ckpt/matterport_layout_ft.pth' ## best 227 temp 96 temp 30
-##def_pth ='ckpt/matterport_layout.pth' ## best 227 temp 96 temp 30
-def_pth ='ckpt/m3d_atlanta_101.pth' ##
-##def_pth ='ckpt/matterport_layout_ft_atlanta.pth' ## m3d and atlanta fine tuning OK per atlanta numerico - da testare con m3d test
-
-##def_output_dir = 'results/atlantalayout/'
-def_output_dir = 'results/matterportlayout/'
-
-##def_img = 'C:/vic/trunk/software/atlanta_net/data/matterport3D_test_clean/img/*.*'
-##def_img = 'C:/vic/trunk/software/atlanta_net/data/atlantalayout/test/img/*.*'
-##def_img = 'C:/vic/trunk/software/atlanta_net/data/atlantalayout/test/img/2azQ1b91cZZ_02ee4a5177f844c0867d3e174a1080e2_equi.png' ###atlanta outlayer with m3d
-def_img = 'C:/vic/trunk/software/atlanta_net/data/matterport3D_test_clean/img/7y3sRwLe3Va_1410b021e1c14f529188eb026fbb369a.png' ### from M3D best test - Adam perfect
+def_img = 'data/atlantalayout/test/img/2t7WUuJeko7_c2e11b94c07a4d6c85cc60286f586a02_equi.png' #
 
 def cuda_to_cpu_tensor(x_tensors):
     x_tensors = x_tensors.cpu().numpy()
@@ -78,10 +70,8 @@ def h_from_contours(cp_prob, fp_prob):
            cp_prob_scaled = tools.resize_crop(cp_prob, h_ratio, fp_prob.shape[0])
 
        cp_prob_cont = tools.approx_shape(cp_prob_scaled)
-
        
        i_cp_prob = np.zeros(cp_prob_scaled.shape)
-
 
        c_count = cp_prob_cont.shape[0]
 
@@ -97,9 +87,13 @@ def h_from_contours(cp_prob, fp_prob):
        if(i_count>max_i):
            max_i = i_count
            h_opt = h - def_camera_h
-               ##break
     
-    return h_opt    
+    if(h_opt>0):
+        ceiling_height = h_opt
+    else:
+        ceiling_height = 1.3 ###default value is case of failure
+
+    return ceiling_height    
     
 
 if __name__ == '__main__':
@@ -151,8 +145,7 @@ if __name__ == '__main__':
             img_ori = np.array(img_pil)[..., :3].transpose([2, 0, 1]).copy()
             e_x = torch.FloatTensor([img_ori / 255])
 
-            print('e_x shape',e_x.shape,'for image',i_path)
-                  
+            print('e_x shape',e_x.shape,'for image',i_path)                  
             
             e2p = A2P(out_dim=net.fp_size, gpu=False)
 
@@ -178,35 +171,23 @@ if __name__ == '__main__':
             cp_ret, cp_prob = cv2.threshold(up_mask_img, 10, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
             fp_ret, fp_prob = cv2.threshold(down_mask_img, 10, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU) 
             
-            h_f_mean = def_camera_h*100.0
-            h_c_mean = 130.0 ###default - backup in case h form contour fails
+            ##using cm to export
+            h_f_mean = 100.0 * def_camera_h 
+            h_c_mean = 100.0 * h_from_contours(cp_prob,fp_prob)
 
-            ###NB. fixed focal is h:90.2
+            print('Estimated heights:',h_c_mean,-h_f_mean)
             
-            h_c = 100.0*h_from_contours(cp_prob,fp_prob)
-            
-            if h_c>0:
-                h_c_mean = h_c
-              
-                        
+                       
             scale_f = h_f_mean/atlanta_transform.fl
             scale_c = h_c_mean/atlanta_transform.fl
-
-            ##print('floor metric scale',scale_f, scale_c)
-                       
+                                              
             cp_prob_metric = tools.resize(cp_prob, scale_c)
             fp_prob_metric = tools.resize(fp_prob, scale_f)
                                                             
             c_pts, r_c, c_area = tools.approx_shape(cp_prob_metric, return_reliability=True)
             f_pts, r_f, f_area = tools.approx_shape(fp_prob_metric, return_reliability=True)                       
-
-            print('ceiling reliability and area',r_c, c_area,'floor reliability and area',r_f, f_area)  
-            
-            ##area_ratio = min(c_area,f_area) / max(c_area,f_area)
-
-            ##print('area ratio',area_ratio)
-                      
-            if( (r_c<0.7 and r_f>r_c)):##or (area_ratio<0.25) ):
+                                             
+            if( (r_c<0.7 and r_f>r_c)):
                 ###ceiling dims unreliable using floor shape
                 room_pts = f_pts
                 scale = scale_f                    
@@ -214,37 +195,18 @@ if __name__ == '__main__':
                 room_pts = c_pts  
                 scale = scale_c
             
-            fp_size  = net.fp_size*scale
-            
-            print('saving heights',h_c_mean,-h_f_mean)
+            ####recovering metric scale to save the model
+            fp_size  = net.fp_size*scale               
             
             if(len(room_pts)>3):
-                ##rint('2D shape', room_pts.shape)
-                json_name = tools.export2json(room_pts, W, H, fp_size, args.output_dir, args.img, k, h_c_mean, -h_f_mean)
-                
+                json_name = tools.export2json(room_pts, W, H, fp_size, args.output_dir, args.img, k, h_c_mean, -h_f_mean)                
             else:
-                print('height recovery failed for',i_path)
+                print('Failing to save model ',i_path)
 
-##################################################################################################################################                                  
+#visualize output#####################                           
                                                           
             if(args.visualize):
-                output_seg = False
-
-                if(output_seg):
-                    bon = tools.transform2equi(room_pts,h_c_mean,h_f_mean, W, H, net.fp_size, scale)           
-                                                                                                                                               
-                    vis_out = tools.visualize_equi_model(e_x.squeeze(), torch.FloatTensor(bon.copy()))
-
-                    if (vis_out is not None):
-                        plt.figure(6)
-                        plt.title('Equi mask')
-                        plt.imshow(vis_out)
-
-                    ##vis_path = os.path.join(args.output_dir, k + '.raw.png')
-                    ##vh, vw = vis_out.shape[:2]
-                    ##Image.fromarray(vis_out).save(vis_path)
-
-
+                                              
                 ### draw functions
                 x_up_img = tools.x2image(x_up.squeeze(0))
                 x_down_img = tools.x2image(x_down.squeeze(0))
@@ -261,33 +223,16 @@ if __name__ == '__main__':
                 if(len(f_pts)>3):
                    cv2.polylines(footprint_down_metric, [f_pts], True, (255,0,0),2,cv2.LINE_AA)
             
-
                 if (json_name is not None):
                     layout_viewer.show_3D_layout(args.img, json_name, def_camera_h)
                 
                 plt.figure(0)
                 plt.title('Ceiling tensor with result')
                 plt.imshow(footprint_up_metric)
-
-                ##plt.figure(1)
-                ##plt.title('Inferred ceiling mask')
-                ##plt.imshow(up_mask_img)
-
-                ##plt.figure(2)
-                ##plt.title('Filtered ceiling mask')
-                ##plt.imshow(cp_prob)
-
-                plt.figure(3)
+                                
+                plt.figure(1)
                 plt.title('Floor tensor with result')
                 plt.imshow(footprint_down_metric)
-
-                ##plt.figure(4)
-                ##plt.title('Inferred floor mask')
-                ##plt.imshow(down_mask_img)
-
-                ##plt.figure(5)
-                ##plt.title('Filtered floor mask')
-                ##plt.imshow(fp_prob)
                                            
                 plt.show()                   
             

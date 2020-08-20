@@ -9,7 +9,7 @@ from shapely.geometry import Polygon
 from tools import np_coor2xy, np_coory2v
 
 
-def test_general_ceiling(id, dt_cor_id, dt_z0, dt_z1, gt_cor_id, w, h, losses):
+def test_shape(id, dt_cor_id, dt_z0, dt_z1, gt_cor_id, w, h, losses):
      
     dt_floor_coor = dt_cor_id[1::2]
     dt_ceil_coor = dt_cor_id[0::2]
@@ -130,20 +130,16 @@ def prepare_gtdt_pairs(gt_glob, dt_glob):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--dt_glob', required=False, default = '../results/matterportlayout/*json')
-    ##parser.add_argument('--dt_glob', required=False, default = '../results/matterportlayout_ft/*json')
-    ##parser.add_argument('--dt_glob', required=False, default = '../results/atlantalayout/*json')
+    parser.add_argument('--dt_glob', required=False, default = '../results/*json')
     
-    parser.add_argument('--gt_glob', required=False, default = 'C:/vic/trunk/software/atlanta_net/data/matterport3D_test_clean/label_cor/*')##scene_00000_485142.txt',
-    ##parser.add_argument('--gt_glob', required=False, default = 'C:/vic/trunk/software/atlanta_net/data/atlantalayout/test/label_cor/*')                        
+    parser.add_argument('--gt_glob', required=False, default = '../data/atlantalayout/test/label_cor/*')             
     parser.add_argument('--w', default=1024, type=int,
                         help='GT images width')
     parser.add_argument('--h', default=512, type=int,
                         help='GT images height')
     args = parser.parse_args()
 
-    # Prepare (gt, dt) pairs
-        
+    # Prepare (gt, dt) pairs        
     gtdt_pairs = prepare_gtdt_pairs(args.gt_glob, args.dt_glob)
         
     # Testing
@@ -153,11 +149,7 @@ if __name__ == '__main__':
     ])
 
     idx = 0
-
-    ##FIXME find best
-    min_count = 0
-    max_count = 0
-
+        
     for gt_path, dt_path in tqdm(gtdt_pairs, desc='Testing'):
         # Parse ground truth
                 
@@ -176,16 +168,10 @@ if __name__ == '__main__':
 
         dt_z0 = np.array(dt['z0'], np.float32)
         dt_z1 = np.array(dt['z1'], np.float32)
-              
-        ##loc_iou3d = test_general_ext(idx, dt_cor_id, dt_z0, dt_z1, gt_cor_id, args.w, args.h, losses)
-        loc_iou3d, loc_iou2d, loc_iouH = test_general_ceiling(idx, dt_cor_id, dt_z0, dt_z1, gt_cor_id, args.w, args.h, losses)
-                
-        if(loc_iou3d<0.1):
-            print('outlier',dt_path)
-            max_count = max_count + 1
-
-    print('max count',max_count)
-            
+               
+        loc_iou3d, loc_iou2d, loc_iouH = test_shape(idx, dt_cor_id, dt_z0, dt_z1, gt_cor_id, args.w, args.h, losses)
+               
+                    
     for k, result in losses.items():
         iou2d = np.array(result['2DIoU'])
         iou3d = np.array(result['3DIoU'])
