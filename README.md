@@ -13,6 +13,11 @@ We additionally provide numerical evaluation compared to ground truth (see repos
 **Method Pipeline overview**:
 ![](assets/overview.jpg)
 
+## Updates
+
+* 2020-08-25: We fix data splitting informations.
+
+
 ## Requirements
 - Python 3
 - pytorch>=1.0.0
@@ -28,8 +33,7 @@ We additionally provide numerical evaluation compared to ground truth (see repos
 To be copied in your local ./ckpt directory.
 - [resnet50_matterportlayout.pth](https://vicserver.crs4.it/atlantanet/resnet50_matterportlayout.pth)
     - Trained with ResNet50 on MatterportLayout cleaned dataset. 
-	    - NB: several images have been removed by the authors due to incorrect annotations or layouts that are not compatible with the original assumptions (e.g. horizontal ceilings). See the original dataset link for details (https://github.com/ericsujw/Matterport3DLayoutAnnotation).
-        - Adopted data splitting provided in the data/splitting folder.
+	    - NB: several images have been removed by the authors due to incorrect annotations or layouts that are not compatible with the original assumptions (e.g. horizontal ceilings). Adopted data splitting provided in the data/splitting folder.
 - [resnet50_atlantalayout.pth](https://vicserver.crs4.it/atlantanet/resnet50_atlantalayout.pth)
     - Trained with ResNet50 on MatterportLayout cleaned dataset and finetuned on the Atlantalayout training set.
 - [resnet101_atlantalayout.pth](https://vicserver.crs4.it/atlantanet/resnet101_atlantalayout.pth)
