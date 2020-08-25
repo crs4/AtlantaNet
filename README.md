@@ -15,7 +15,7 @@ We additionally provide numerical evaluation compared to ground truth (see repos
 
 ## Updates
 
-* 2020-08-25: We fix data splitting informations.
+* 2020-08-25: Adopted MatterportLayout data splitting added and related information updated.
 
 
 ## Requirements
