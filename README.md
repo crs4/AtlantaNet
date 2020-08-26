@@ -15,6 +15,7 @@ We additionally provide numerical evaluation compared to ground truth (see repos
 
 ## Updates
 
+* 2020-08-26: MatterportLayout pre-trained model trained using the original dataset splitting (including non Atlanta World scenes).
 * 2020-08-25: Adopted MatterportLayout data splitting added and related information updated.
 
 
@@ -34,6 +35,9 @@ To be copied in your local ./ckpt directory.
 - [resnet50_matterportlayout.pth](https://vicserver.crs4.it/atlantanet/resnet50_matterportlayout.pth)
     - Trained with ResNet50 on MatterportLayout cleaned dataset. 
 	    - NB: This data splitting, adopted in the paper, compared to the original version of matterportlayout is filtered by scenes that do not respect the Indoor World (single ceiling, Manhattan walls) or Atlanta World (single ceiling, vertical walls) hypothesis. 
+- [resnet50_matterportlayout_full.pth](https://vicserver.crs4.it/atlantanet/resnet50_matterportlayout_full.pth)
+    - Trained with ResNet50 using MatterportLayout original splitting.  
+	    - NB: Includes scenes that do not respect the Atlanta World (single ceiling, vertical walls) hypothesis. Provided for comparisons.
 - [resnet50_atlantalayout.pth](https://vicserver.crs4.it/atlantanet/resnet50_atlantalayout.pth)
     - Trained with ResNet50 on MatterportLayout cleaned dataset and finetuned on the Atlantalayout training set.
 - [resnet101_atlantalayout.pth](https://vicserver.crs4.it/atlantanet/resnet101_atlantalayout.pth)
