@@ -41,7 +41,7 @@ To be copied in your local ./ckpt directory.
     - Trained with ResNet50 using MatterportLayout original splitting.  
 	    - NB: Includes scenes that do not respect the Atlanta World and Indoor World (single ceiling, vertical walls) hypothesis.
 - [resnet50_matterportlayout_iw.pth](https://vicserver.crs4.it/atlantanet/resnet50_matterportlayout_iw.pth)
-    - Trained with ResNet50 on MatterportLayout cleaned dataset (data/splitting). 
+    - Trained with ResNet50 on MatterportLayout cleaned dataset (splitting/). 
 	    - NB: This fitered data, is adopted in the paper combined to the AtlantaLayout dataset (see paper Sec.5.1 for results). Compared to the original version of MatterportLayout is filtered by scenes that do not respect the Indoor World (single ceiling, Manhattan walls) or Atlanta World (single ceiling, vertical walls) hypothesis.
 		Since several annotations have been refined to better adhere to the ceiling profile and the Atlanta/Indoor assumptions, ee both provide splitting files and updated annotations.
 - [resnet50_atlantalayout.pth](https://vicserver.crs4.it/atlantanet/resnet50_atlantalayout.pth)
