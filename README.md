@@ -59,12 +59,11 @@ We follow the same notation (.png image with .txt associated) proposed by Horizo
 Instruction to download and prepare PanoContext/Stanford2D3D, MatterportLayout, Structured3D datasets are provided by HorizonNet (https://github.com/sunset1995/HorizonNet) and MatterportLayout(https://github.com/ericsujw/Matterport3DLayoutAnnotation).
 
 - AtlantaLayout Dataset
-        - Download from here: https://vicserver.crs4.it/atlantanet/atlantalayout.zip, the additional Atlanta World cases.
-		- Prepare a cleaned version of the MatterportLayout dataset following the split provided in splitting/ folder. Such release is filtered by scenes that do not respect the Indoor World (single ceiling, Manhattan walls) or Atlanta World (single ceiling, vertical walls) hypothesis.
-		Furthermore several annotations have been refined to improve thier accuracy, thus we both provide splitting files and updated annotations.
-		- Train the model using the cleaned MatterportLayout dataset (train and validation split).
-		- Perform fine tuning using Atlanta World additional cases (train and validation split from zip file above).
-		- The adopted testing set is the union on the cleaned MatterportLayout and the new AtlantaLayout testing scenes.
+    - Download from here: https://vicserver.crs4.it/atlantanet/atlantalayout.zip, the additional Atlanta World cases.
+	- Prepare a cleaned version of the MatterportLayout dataset following the split provided in splitting/ folder. Such release is filtered by scenes that do not respect the Indoor World (single ceiling, Manhattan walls) or Atlanta World (single ceiling, vertical walls) hypothesis. Furthermore several annotations have been refined to improve thier accuracy, thus we both provide splitting files and updated annotations.
+	- Train the model using the cleaned MatterportLayout dataset (train and validation split).
+	- Perform fine tuning using Atlanta World additional cases (train and validation split from zip file above).
+	- The adopted testing set is the union on the cleaned MatterportLayout and the new AtlantaLayout testing scenes.
 	
 ## Inference on equirectagular images	
 Here an example of inferring using the pre-trained model on MatterportLayout finetuned on AtlantaLayout:
