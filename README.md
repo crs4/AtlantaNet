@@ -10,7 +10,7 @@ We additionally provide numerical evaluation compared to ground truth (see repos
 
 3D viewer and evaluation metrics are based on the code provided by HorizonNet(https://github.com/sunset1995/HorizonNet) .
 
-**News, 2020-08-31** - Data splitting and pre-trained models updated. See informations.
+**News, 2020-08-31** - Data splitting and pre-trained models updated. See instructions about pre-trained models.
 
 **Method Pipeline overview**:
 ![](assets/overview.jpg)
@@ -18,7 +18,7 @@ We additionally provide numerical evaluation compared to ground truth (see repos
 ## Updates
 * 2020-08-31: IMPORTANT UPDATE: fixing several issues
 	- OpenCV polygonal approximation for .json export
-	- Best valid epochs provided now are matching with final layout
+	- Best valid epochs provided (matching with final 3D layout)
 	- Data splitting and annotation updated
 * 2020-08-26: MatterportLayout pre-trained model trained using the original dataset splitting (including non Atlanta World scenes).
 * 2020-08-25: Adopted MatterportLayout data splitting added and related information updated.
@@ -59,11 +59,12 @@ We follow the same notation (.png image with .txt associated) proposed by Horizo
 Instruction to download and prepare PanoContext/Stanford2D3D, MatterportLayout, Structured3D datasets are provided by HorizonNet (https://github.com/sunset1995/HorizonNet) and MatterportLayout(https://github.com/ericsujw/Matterport3DLayoutAnnotation).
 
 - AtlantaLayout Dataset
-        - Download from  https://vicserver.crs4.it/atlantanet/atlantalayout.zip the specific and complex Atlanta World cases
+        - Download from here: https://vicserver.crs4.it/atlantanet/atlantalayout.zip, the additional Atlanta World cases.
 		- Prepare a cleaned version of the MatterportLayout dataset following the split provided in splitting/ folder. Such release is filtered by scenes that do not respect the Indoor World (single ceiling, Manhattan walls) or Atlanta World (single ceiling, vertical walls) hypothesis.
 		Furthermore several annotations have been refined to improve thier accuracy, thus we both provide splitting files and updated annotations.
 		- Train the model using the cleaned MatterportLayout dataset (train and validation split).
 		- Perform fine tuning using Atlanta World additional cases (train and validation split from zip file above).
+		- The adopted testing set is the union on the cleaned MatterportLayout and the new AtlantaLayout testing scenes.
 	
 ## Inference on equirectagular images	
 Here an example of inferring using the pre-trained model on MatterportLayout finetuned on AtlantaLayout:
