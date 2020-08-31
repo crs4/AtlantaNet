@@ -32,7 +32,7 @@ We additionally provide numerical evaluation compared to ground truth (see repos
 - sklearn
 - Pillow
 - tqdm
-- opencv-python>=4.1.1 (for layout simplification and output export)
+- opencv-python>=4.1.1 (for layout simplification and output exporting)
 - open3d>=0.8 (for layout 3D viewer)
 
 ## Download Pretrained Models
@@ -42,22 +42,28 @@ To be copied in your local ./ckpt directory.
 	    - NB: Includes scenes that do not respect the Atlanta World and Indoor World (single ceiling, vertical walls) hypothesis.
 - [resnet50_matterportlayout_iw.pth](https://vicserver.crs4.it/atlantanet/resnet50_matterportlayout_iw.pth)
     - Trained with ResNet50 on MatterportLayout cleaned dataset (splitting/). 
-	    - NB: This fitered data, is adopted in the paper combined to the AtlantaLayout dataset (see paper Sec.5.1 for results). Compared to the original version of MatterportLayout is filtered by scenes that do not respect the Indoor World (single ceiling, Manhattan walls) or Atlanta World (single ceiling, vertical walls) hypothesis.
-		Since several annotations have been refined to better adhere to the ceiling profile and the Atlanta/Indoor assumptions, ee both provide splitting files and updated annotations.
+	    - NB: This fitered data, is adopted in the paper to test Atlanta World scenes (see paper Sec.5.1). 
+		Refer to this model for Atlanta World performances (without fine tuning).
+		Compared to the original version of MatterportLayout is filtered by scenes that do not respect the Indoor World (single ceiling, Manhattan walls) or Atlanta World (single ceiling, vertical walls) hypothesis.
+		Furthermore several annotations have been refined to improve thier accuracy (we both provide splitting files and updated annotations to facilitate comparisons).
 - [resnet50_atlantalayout.pth](https://vicserver.crs4.it/atlantanet/resnet50_atlantalayout.pth)
-    - Trained with ResNet50 on MatterportLayout cleaned dataset and finetuned on the AtlantaLayout training set.
+    - Trained with ResNet50 on MatterportLayout cleaned dataset (see model above) and finetuned on the AtlantaLayout training set.
 - [resnet101_atlantalayout.pth](https://vicserver.crs4.it/atlantanet/resnet101_atlantalayout.pth)
-    - Trained with ResNet101 on MatterportLayout cleaned dataset and finetuned on the AtlantaLayout training set.
+    - Trained with ResNet101 on AtlantaLayout dataset. Provided for ablation study and for qualitative comparison.
 
 It should be noted that results are obtained converting PanoAnnotator (https://github.com/SunDaDenny/PanoAnnotator) annotations, which are general Manhattan World scenes, to Indoor World model scenes (assumption adopted by LayoutNet, DulaNet and HorizonNet - see https://onlinelibrary.wiley.com/doi/abs/10.1111/cgf.14021 for details about such priors). 
 Due to this conversion and opencv polygonal approximation, numerical performances can slighly differ from those presented in the paper.
 
-## Download Dataset
+## Dataset preparation
 We follow the same notation (.png image with .txt associated) proposed by HorizonNet (https://github.com/sunset1995/HorizonNet).
 Instruction to download and prepare PanoContext/Stanford2D3D, MatterportLayout, Structured3D datasets are provided by HorizonNet (https://github.com/sunset1995/HorizonNet) and MatterportLayout(https://github.com/ericsujw/Matterport3DLayoutAnnotation).
 
 - AtlantaLayout Dataset
-        - Download from here: https://vicserver.crs4.it/atlantanet/atlantalayout.zip
+        - Download from  https://vicserver.crs4.it/atlantanet/atlantalayout.zip the specific and complex Atlanta World cases
+		- Prepare a cleaned version of the MatterportLayout dataset following the split provided in splitting/ folder. Such release is filtered by scenes that do not respect the Indoor World (single ceiling, Manhattan walls) or Atlanta World (single ceiling, vertical walls) hypothesis.
+		Furthermore several annotations have been refined to improve thier accuracy, thus we both provide splitting files and updated annotations.
+		- Train the model using the cleaned MatterportLayout dataset (train and validation split).
+		- Perform fine tuning using Atlanta World additional cases (train and validation split from zip file above).
 	
 ## Inference on equirectagular images	
 Here an example of inferring using the pre-trained model on MatterportLayout finetuned on AtlantaLayout:
