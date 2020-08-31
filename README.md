@@ -10,7 +10,7 @@ We additionally provide numerical evaluation compared to ground truth (see repos
 
 3D viewer and evaluation metrics are based on the code provided by HorizonNet(https://github.com/sunset1995/HorizonNet) .
 
-**News, 2020-08-31** - Data splitting and matching pre-trained models updated. See provided informations.
+**News, 2020-08-31** - Data splitting and pre-trained models updated. See informations.
 
 **Method Pipeline overview**:
 ![](assets/overview.jpg)
@@ -18,7 +18,7 @@ We additionally provide numerical evaluation compared to ground truth (see repos
 ## Updates
 * 2020-08-31: IMPORTANT UPDATE: fixing several issues
 	- OpenCV polygonal approximation for .json export
-	- Best valid epochs provided now matching with final layout
+	- Best valid epochs provided now are matching with final layout
 	- Data splitting and annotation updated
 * 2020-08-26: MatterportLayout pre-trained model trained using the original dataset splitting (including non Atlanta World scenes).
 * 2020-08-25: Adopted MatterportLayout data splitting added and related information updated.
