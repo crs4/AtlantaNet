@@ -88,15 +88,24 @@ def approx_shape(data, fp_threshold=0.5, epsilon_b=0.005, rel_threshold=0.5, ret
         mergedlist = np.concatenate((data_cnt[0], data_cnt[1]), axis=0)
         approx = cv2.convexHull(mergedlist)
 
+        ###condition 2.: check camera
+        dist = cv2.pointPolygonTest(approx,(w/2,h/2), True)
+
+        if(dist<0):
+            reliability = 0.1
+
     else:
-        epsilon = epsilon_b*cv2.arcLength(data_cnt[0], True)
-        approx = cv2.approxPolyDP(data_cnt[0], epsilon,True)
+        
+        if(len(data_cnt)>0):
+            epsilon = epsilon_b*cv2.arcLength(data_cnt[0], True)
+            approx = cv2.approxPolyDP(data_cnt[0], epsilon, True)
+            reliability = 0.0
 
-    ###condition 2.: check camera
-    dist = cv2.pointPolygonTest(approx,(w/2,h/2), True)
+            ###condition 2.: check camera
+            dist = cv2.pointPolygonTest(approx,(w/2,h/2), True)
 
-    if(dist<0):
-        reliability = 0.1
+            if(dist<0):
+                reliability = 0.1
 
 
     if return_reliability:

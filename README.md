@@ -10,12 +10,13 @@ We additionally provide numerical evaluation compared to ground truth (see repos
 
 3D viewer and evaluation metrics are based on the code provided by HorizonNet(https://github.com/sunset1995/HorizonNet) .
 
-**News, 2020-08-31** - Data splitting and pre-trained models updated. See instructions about pre-trained models.
+**News, 2020-09-1** - Data splitting and pre-trained models updated. See instructions about pre-trained models.
 
 **Method Pipeline overview**:
 ![](assets/overview.jpg)
 
 ## Updates
+* 2020-09-1: resnet50_matterportlayout_origin.pth updated. Fixed contour approximation issue.
 * 2020-08-31: IMPORTANT UPDATE: fixing several issues
 	- OpenCV polygonal approximation for .json export
 	- Best valid epochs provided (matching with final 3D layout)
