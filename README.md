@@ -16,6 +16,7 @@ We additionally provide numerical evaluation compared to ground truth (see repos
 ![](assets/overview.jpg)
 
 ## Updates
+* 2020-09-2: .txt annotations (HorizonNet format) converted from .json (PanoAnnotator) provided. 
 * 2020-09-1: resnet50_matterportlayout_origin.pth updated. Fixed contour approximation issue.
 * 2020-08-31: IMPORTANT UPDATE: fixing several issues
 	- OpenCV polygonal approximation for .json export
@@ -52,8 +53,9 @@ To be copied in your local ./ckpt directory.
 - [resnet101_atlantalayout.pth](https://vicserver.crs4.it/atlantanet/resnet101_atlantalayout.pth)
     - Trained with ResNet101 on AtlantaLayout dataset. Provided for ablation study and for qualitative comparison.
 
-It should be noted that results are obtained converting PanoAnnotator (https://github.com/SunDaDenny/PanoAnnotator) annotations, which are general Manhattan World scenes, to Indoor World model scenes (assumption adopted by LayoutNet, DulaNet and HorizonNet - see https://onlinelibrary.wiley.com/doi/abs/10.1111/cgf.14021 for details about such priors). 
-Due to this conversion and opencv polygonal approximation, numerical performances can slighly differ from those presented in the paper.
+It should be noted that results are obtained converting PanoAnnotator (https://github.com/SunDaDenny/PanoAnnotator) annotations, which are general Manhattan World scenes, to Indoor World model scenes (assumption adopted by LayoutNet, DulaNet and HorizonNet - see https://onlinelibrary.wiley.com/doi/abs/10.1111/cgf.14021 for details about such priors).
+Converter script is available in the misc folder (misc/json2txt.py).
+Due to this conversion and opencv polygonal approximation, numerical performances can slighly differ from those presented in the paper or obtained using a different annotation format.
 
 ## Dataset preparation
 We follow the same notation (.png image with .txt associated) proposed by HorizonNet (https://github.com/sunset1995/HorizonNet).
