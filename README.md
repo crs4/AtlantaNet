@@ -11,7 +11,7 @@ We additionally provide numerical evaluation compared to ground truth (see repos
 3D viewer and evaluation metrics are based on the code provided by HorizonNet(https://github.com/sunset1995/HorizonNet) .
 
 **News, 2020-09-14** - Original MatterportLayout annotations, data splitting and pre-trained models provided.
-**News, 2020-09-7** - Data splitting and pre-trained models updated. See instructions about pre-trained models.
+
 
 **Method Pipeline overview**:
 ![](assets/overview.jpg)
