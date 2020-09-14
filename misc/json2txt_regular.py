@@ -47,26 +47,21 @@ for json_file in data_paths:
     pixU = [] #np.zeros( data["layoutPoints"]["num"], 2)
     pixF = [] #np.zeros( data["layoutPoints"]["num"], 2)
     pixC = [] #np.zeros( data["layoutPoints"]["num"], 2)
+    
     for p in data["layoutPoints"]["points"]:
       imgU = int(p["coords"][0]*float(width)-0.5)
       x =  p["xyz"][0]
       y =  p["xyz"][1]
       z =  p["xyz"][2]
-      if y==0.0:
-        vfloor    = np.arctan(floorH/np.sqrt(x**2 + z**2))
-        vceiling  = np.arctan(ceilingH/np.sqrt(x**2 + z**2))
-        imgVfloor = int((-vfloor/PI+0.5)*float(height)-0.5)
-        imgVceiling = int((-vceiling/PI+0.5)*float(height)-0.5)
-        pixU.append(imgU)
-        pixC.append(imgVceiling)
-        pixF.append(imgVfloor)
-
-    c_ind = np.lexsort((pixC,pixU)) 
-    f_ind = np.lexsort((pixF,pixU)) 
-
-    for i in c_ind:
-      print(pixU[i],pixC[i],file=write_file)
-      print(pixU[i],pixF[i],file=write_file)
+      
+      vfloor    = np.arctan(floorH/np.sqrt(x**2 + z**2))
+      vceiling  = np.arctan(ceilingH/np.sqrt(x**2 + z**2))
+      imgVfloor = int((-vfloor/PI+0.5)*float(height)-0.5)
+      imgVceiling = int((-vceiling/PI+0.5)*float(height)-0.5)
+                  
+      print(imgU,imgVceiling,file=write_file)
+      print(imgU,imgVfloor,file=write_file)
+             
     read_file.close()
     write_file.close()
     

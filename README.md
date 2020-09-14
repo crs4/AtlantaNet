@@ -10,15 +10,18 @@ We additionally provide numerical evaluation compared to ground truth (see repos
 
 3D viewer and evaluation metrics are based on the code provided by HorizonNet(https://github.com/sunset1995/HorizonNet) .
 
+**News, 2020-09-14** - Original MatterportLayout annotations, data splitting and pre-trained models provided.
 **News, 2020-09-7** - Data splitting and pre-trained models updated. See instructions about pre-trained models.
 
 **Method Pipeline overview**:
 ![](assets/overview.jpg)
 
 ## Updates
-* 2020-09-7: .txt annotations (HorizonNet format) of original MatterportLayout dataset provided and related pre-trained model updated.
-	- MatterportLayout .txt annotations with the same corners splitting of the .json format provided(splitting/matterport_layout_origin).
-	- MatterportLayout .txt annotations with fixed corners which don't respect IW/AW assumption provided (splitting/matterport_layout_origin_fix_corners).
+* 2020-09-14: Original MatterportLayout .json annotations fully converted to.txt (HorizonNet format).
+	- MatterportLayout .txt annotations with the same corners splitting of the .json format provided(_regular_ in the splitting/ folder).
+	- Pre-trained model on the same data provided.
+	- Adopted converter json2txt_regular.py
+	- NB. previous annotations and models cleaned-up (_origin_).
 * 2020-09-2: .txt annotations (HorizonNet format) converted from .json (PanoAnnotator) provided. 
 * 2020-09-1: resnet50_matterportlayout_origin.pth updated. Fixed contour approximation issue.
 * 2020-08-31: IMPORTANT UPDATE: fixing several issues
@@ -42,12 +45,9 @@ We additionally provide numerical evaluation compared to ground truth (see repos
 
 ## Download Pretrained Models
 To be copied in your local ./ckpt directory.
-- [resnet50_matterportlayout_origin.pth](https://vicserver.crs4.it/atlantanet/resnet50_matterportlayout_origin.pth)
+- [resnet50_matterportlayout_regular.pth](https://vicserver.crs4.it/atlantanet/resnet50_matterportlayout_regular.pth)
     - Trained with ResNet50 using MatterportLayout original splitting.  
 	    - NB: Includes scenes that do not respect the Atlanta World and Indoor World (single ceiling, vertical walls) hypothesis.
-- [resnet50_matterportlayout_origin_corners_fix.pth](https://vicserver.crs4.it/atlantanet/resnet50_matterportlayout_origin.pth)
-    - Trained with ResNet50 using MatterportLayout original splitting where wrong annotations are fixed.  
-	    - NB: Still includes scenes that do not respect the Atlanta World and Indoor World (single ceiling, vertical walls) hypothesis.
 - [resnet50_matterportlayout_iw.pth](https://vicserver.crs4.it/atlantanet/resnet50_matterportlayout_iw.pth)
     - Trained with ResNet50 on MatterportLayout cleaned dataset (splitting/). 
 	    - NB: This fitered data, is adopted in the paper to test Atlanta World scenes (see paper Sec.5.1). 
