@@ -10,13 +10,14 @@ We additionally provide numerical evaluation compared to ground truth (see repos
 
 3D viewer and evaluation metrics are based on the code provided by HorizonNet(https://github.com/sunset1995/HorizonNet) .
 
-**News, 2020-09-14** - Original MatterportLayout annotations, data splitting and pre-trained models provided.
+**News, 2020-09-15** - Original MatterportLayout annotations, data splitting and pre-trained models provided. Fixed some bugs on reliability check
 
 
 **Method Pipeline overview**:
 ![](assets/overview.jpg)
 
 ## Updates
+* 2020-09-15:Fixed reliability check bugs in tools.py and inference script
 * 2020-09-14: Original MatterportLayout .json annotations fully converted to.txt (HorizonNet format).
 	- MatterportLayout .txt annotations with the same corners splitting of the .json format provided(_regular_ in the splitting/ folder).
 	- Pre-trained model on the same data provided.
