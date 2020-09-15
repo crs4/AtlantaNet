@@ -67,6 +67,7 @@ def approx_shape(data, fp_threshold=0.5, epsilon_b=0.005, rel_threshold=0.5, ret
     ##data_cnt, data_heri = cv2.findContours(data_thresh, 0, 2)##CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE
         
     reliability = 0.0
+
     approx = np.empty([1, 1, 2])
     
     if(len(data_cnt)>0):    
@@ -99,7 +100,7 @@ def approx_shape(data, fp_threshold=0.5, epsilon_b=0.005, rel_threshold=0.5, ret
         if(len(data_cnt)>0):
             epsilon = epsilon_b*cv2.arcLength(data_cnt[0], True)
             approx = cv2.approxPolyDP(data_cnt[0], epsilon, True)
-            reliability = 0.0
+            ##reliability = 0.0
 
             ###condition 2.: check camera
             dist = cv2.pointPolygonTest(approx,(w/2,h/2), True)

@@ -234,9 +234,4 @@ if __name__ == '__main__':
                 plt.title('Floor tensor with result')
                 plt.imshow(footprint_down_metric)
                                            
-                plt.show()                   
-            
-                      
-            
-
-   
+                plt.show()               
