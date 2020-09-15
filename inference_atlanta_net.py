@@ -187,7 +187,7 @@ if __name__ == '__main__':
             c_pts, r_c, c_area = tools.approx_shape(cp_prob_metric, return_reliability=True)
             f_pts, r_f, f_area = tools.approx_shape(fp_prob_metric, return_reliability=True)                       
                                              
-            if( (r_c<0.7 and r_f>r_c)):
+            if( (r_c<0.7 and r_f>r_c) or len(c_pts)<3):
                 ###ceiling dims unreliable using floor shape
                 room_pts = f_pts
                 scale = scale_f                    
