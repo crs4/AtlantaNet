@@ -88,8 +88,7 @@ python inference_atlanta_net.py --pth ckpt/resnet50_atlantalayout.pth --img data
 NB. Since the network output is an image mask and probabilities are not necessary, the final Sigmoid operation is replaced in this script by a simpler threshold operation.
 
 ## Acknowledgement
-- This work has received funding from Sardinian Regional Authorities under projects VIGECLAB, AMAC, and TDM (POR FESR 2014-2020). We also acknowledge the contribution of the European Union’s H2020 research and innovation programme under grant agreements 813170 (EVOCATION).
-- The available is intended as a demo to complement the publication, while the full source code remains the property of CRS4.
+- This work has received funding from Sardinian Regional Authorities under projects VIGECLAB, AMAC, and TDM (POR FESR 2014-2020). We also acknowledge the contribution of the European Union’s H2020 research and innovation programme under grant agreements 813170 (EVOCATION). The provided demo is released to complement the publication under the conditions of the mentioned projects, while the full source code remains the property of CRS4.
 - This demo implementation leverages on parts of the HorizonNet code release (https://github.com/sunset1995/HorizonNet) . We thank authors of HorizonNet for their great work and repo.
 - Thanks [Yu-hsuan Yeh](https://github.com/Yeh-yu-hsuan) for helping us fixing several issues on this release.
 
