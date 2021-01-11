@@ -8,7 +8,7 @@ This repo is a **python** implementation where you can try:
 - **Inference on panoramic images** to get general shaped room layout (Manhattan or Atlanta World) as .json output (3D model viewing included).
 We additionally provide numerical evaluation compared to ground truth (see repository).
 
-3D viewer and evaluation metrics are based on the code provided by HorizonNet(https://github.com/sunset1995/HorizonNet) .
+3D viewer and evaluation metrics are based on the code provided by HorizonNet(https://github.com/sunset1995/HorizonNet).
 
 **News, 2020-09-15** - Original MatterportLayout annotations, data splitting and pre-trained models provided. Fixed some bugs on reliability check
 
@@ -84,10 +84,17 @@ python inference_atlanta_net.py --pth ckpt/resnet50_atlantalayout.pth --img data
     - `--img` path to the input equirectangular image.
     - `--output_dir` path to the directory to dump .json results (Optional: default = results/).
     - `--visualize` optional for visualizing textured 3D model (Optional: default = True).
+	
+NB. Since the network output is an image mask and probabilities are not necessary, the final Sigmoid operation is replaced in this script by a simpler threshold operation.
 
 ## Acknowledgement
-- This implementation leverages on parts of the HorizonNet code release (https://github.com/sunset1995/HorizonNet) . We thank authors of HorizonNet for their great work and repo.
+- This work has received funding from Sardinian Regional Authorities under projects VIGECLAB, AMAC, and TDM (POR FESR 2014-2020). We also acknowledge the contribution of the European Union’s H2020 research and innovation programme under grant agreements 813170 (EVOCATION).
+- The available is intended as a demo to complement the publication, while the full source code remains the property of CRS4.
+- This demo implementation leverages on parts of the HorizonNet code release (https://github.com/sunset1995/HorizonNet) . We thank authors of HorizonNet for their great work and repo.
 - Thanks [Yu-hsuan Yeh](https://github.com/Yeh-yu-hsuan) for helping us fixing several issues on this release.
+
+
+
 
 	
 ## Citation
