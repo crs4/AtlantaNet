@@ -10,6 +10,15 @@ We additionally provide numerical evaluation compared to ground truth (see repos
 
 3D viewer and evaluation metrics are based on the code provided by HorizonNet(https://github.com/sunset1995/HorizonNet).
 
+## Acknowledgement
+- This work has received funding from Sardinian Regional Authorities under project AMAC: MOBILE ACQUISITION OF COMPLEX ENVIRONMENTS (CUP J76C18000230002). 
+This release shows a demo of some of the results achieved in the project. 
+Additional data and pipeline for multi-room integration and extension are presented in the following papers:
+- https://onlinelibrary.wiley.com/doi/10.1111/cgf.14021
+- https://onlinelibrary.wiley.com/doi/10.1111/cgf.13842
+
+
+
 **News, 2020-09-15** - Original MatterportLayout annotations, data splitting and pre-trained models provided. Fixed some bugs on reliability check
 
 
