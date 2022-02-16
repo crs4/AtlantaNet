@@ -26,6 +26,7 @@ Additional data and pipeline for multi-room integration and extension are presen
 ![](assets/overview.jpg)
 
 ## Updates
+* 2021-03-1: Minor updates in the documentation
 * 2020-09-15:Fixed reliability check bugs in tools.py and inference script
 * 2020-09-14: Original MatterportLayout .json annotations fully converted to.txt (HorizonNet format).
 	- MatterportLayout .txt annotations with the same corners splitting of the .json format provided(_regular_ in the splitting/ folder).
