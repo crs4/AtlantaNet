@@ -18,6 +18,7 @@ We additionally provide numerical evaluation compared to ground truth (see repos
 ![](assets/overview.jpg)
 
 ## Updates
+* 2025-02-05 Pre-trained weights link updated
 * 2021-03-1: Minor updates in the documentation
 * 2020-09-15:Fixed reliability check bugs in tools.py and inference script
 * 2020-09-14: Original MatterportLayout .json annotations fully converted to.txt (HorizonNet format).
@@ -47,19 +48,19 @@ We additionally provide numerical evaluation compared to ground truth (see repos
 - open3d>=0.8 (for layout 3D viewer)
 
 ## Download Pretrained Models
-To be copied in your local ./ckpt directory.
-- [resnet50_matterportlayout_regular.pth](https://vicserver.crs4.it/atlantanet/resnet50_matterportlayout_regular.pth)
+Download and copy in your local ./ckpt directory from https://vicserver.crs4.it/atlantanet/.
+- [resnet50_matterportlayout_regular.pth]
     - Trained with ResNet50 using MatterportLayout original splitting.  
 	    - NB: Includes scenes that do not respect the Atlanta World and Indoor World (single ceiling, vertical walls) hypothesis.
-- [resnet50_matterportlayout_iw.pth](https://vicserver.crs4.it/atlantanet/resnet50_matterportlayout_iw.pth)
+- [resnet50_matterportlayout_iw.pth]
     - Trained with ResNet50 on MatterportLayout cleaned dataset (splitting/). 
 	    - NB: This fitered data, is adopted in the paper to test Atlanta World scenes (see paper Sec.5.1). 
 		Refer to this model for Atlanta World performances (without fine tuning).
 		Compared to the original version of MatterportLayout is filtered by scenes that do not respect the Indoor World (single ceiling, Manhattan walls) or Atlanta World (single ceiling, vertical walls) hypothesis.
 		Furthermore several annotations have been refined to improve thier accuracy (we both provide splitting files and updated annotations to facilitate comparisons).
-- [resnet50_atlantalayout.pth](https://vicserver.crs4.it/atlantanet/resnet50_atlantalayout.pth)
+- [resnet50_atlantalayout.pth]
     - Trained with ResNet50 on MatterportLayout cleaned dataset (see model above) and finetuned on the AtlantaLayout training set.
-- [resnet101_atlantalayout.pth](https://vicserver.crs4.it/atlantanet/resnet101_atlantalayout.pth)
+- [resnet101_atlantalayout.pth]
     - Trained with ResNet101 on AtlantaLayout dataset. Provided for ablation study and for qualitative comparison.
 
 It should be noted that results are obtained converting PanoAnnotator (https://github.com/SunDaDenny/PanoAnnotator) annotations, which are general Manhattan World scenes, to Indoor World model scenes (assumption adopted by LayoutNet, DulaNet and HorizonNet - see https://onlinelibrary.wiley.com/doi/abs/10.1111/cgf.14021 for details about such priors).
